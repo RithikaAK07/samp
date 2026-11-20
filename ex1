@@ -1,0 +1,72 @@
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+char sym[100][20];
+int n = 0;
+
+int isKeyword(char s[]) {
+    char keywords[6][10] = {
+        "int", "float", "char", "if", "else", "while"
+    };
+
+    for(int i = 0; i < 6; i++) {
+        if(strcmp(s, keywords[i]) == 0)
+            return 1;
+    }
+    return 0;
+}
+
+void addSymbol(char s[]) {
+    for(int i = 0; i < n; i++) {
+        if(strcmp(sym[i], s) == 0)
+            return;
+    }
+
+    strcpy(sym[n], s);
+    n++;
+}
+
+int main() {
+    char s[100];
+
+    printf("Enter tokens (one at a time):\n");
+
+    while(scanf("%s", s) == 1) {
+
+        if(isKeyword(s)) {
+            printf("%s : KEYWORD\n", s);
+        }
+
+        else if(isdigit(s[0])) {
+            printf("%s : CONSTANT\n", s);
+        }
+
+        else if(isalpha(s[0]) || s[0] == '_') {
+            printf("%s : IDENTIFIER\n", s);
+            addSymbol(s);
+        }
+
+        else if(strchr("+-*/=<>!", s[0])) {
+            printf("%s : OPERATOR\n", s);
+        }
+
+        else if(strchr("(){};,", s[0])) {
+            printf("%s : SPECIAL SYMBOL\n", s);
+        }
+
+        else {
+            printf("%s : UNKNOWN\n", s);
+        }
+    }
+
+    printf("\nSYMBOL TABLE\n");
+    printf("-------------\n");
+
+    for(int i = 0; i < n; i++) {
+        printf("%d\t%s\n", i + 1, sym[i]);
+    }
+
+    return 0;
+}
